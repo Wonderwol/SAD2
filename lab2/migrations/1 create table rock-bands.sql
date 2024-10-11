@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS rock-bands (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255),
+	best_song VARCHAR(255)
+);
