@@ -1,1 +1,0 @@
-ALTER TABLE rock-bands RENAME TO rock_bands;

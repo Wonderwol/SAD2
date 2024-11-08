@@ -1,2 +1,2 @@
-DELETE FROM Products
+DELETE FROM rock_bands
 WHERE name='Nirvana';

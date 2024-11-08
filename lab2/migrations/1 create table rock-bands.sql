@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS rock-bands (
+CREATE TABLE IF NOT EXISTS rock_bands (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255),
 	best_song VARCHAR(255)
