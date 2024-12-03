@@ -102,7 +102,7 @@ def index():
     if current_user.is_authenticated:
         return render_template(
             'index.html',
-            lab_title="Лабораторная работа Flask-Login",
+            lab_title="Лабораторная работа 5: Flask-Login",
             lab_description="""Эта лабораторная работа
               демонстрирует использование Flask-Login.""",
             user=current_user
