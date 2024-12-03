@@ -1,12 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import (LoginManager, UserMixin, login_user,
+                         logout_user, login_required, current_user)
+
 
 app = Flask(__name__)
 app.secret_key = '123'
 
+
 # Flask-Login настройка
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
 
 # Модель User
 class User(UserMixin):
@@ -16,16 +20,17 @@ class User(UserMixin):
         self.password = password
         self.name = name
 
+
 # Простая база данных пользователей (для демонстрации)
-users = {
-    1: User(1, "test@example.com", "password123", "John Doe"),
-}
-next_user_id = 2  # Следующий ID для новых пользователей
+users = {}
+next_user_id = 0  # Следующий ID для новых пользователей
+
 
 # Загрузка пользователя
 @login_manager.user_loader
 def load_user(user_id):
     return users.get(int(user_id))
+
 
 # Эндпоинт для регистрации (POST-запрос)
 @app.route('/signup', methods=['GET', 'POST'])
@@ -55,6 +60,7 @@ def signup():
 
     return render_template('signup.html')
 
+
 # Эндпоинт для выхода (GET-запрос)
 @app.route('/logout')
 @login_required
@@ -62,6 +68,7 @@ def logout():
     logout_user()  # Завершаем сессию
     flash('Вы успешно вышли из системы.', 'info')
     return redirect(url_for('login'))
+
 
 # Эндпоинт для входа
 @app.route('/login', methods=['GET', 'POST'])
@@ -88,6 +95,7 @@ def login():
 
     return render_template('login.html')
 
+
 # Корневой эндпоинт
 @app.route('/')
 def index():
@@ -95,10 +103,8 @@ def index():
         return render_template(
             'index.html',
             lab_title="Лабораторная работа Flask-Login",
-            lab_description="Эта лабораторная работа демонстрирует использование Flask-Login.",
+            lab_description="""Эта лабораторная работа
+              демонстрирует использование Flask-Login.""",
             user=current_user
         )
     return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
