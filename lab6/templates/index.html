@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instance Manager</title>
+</head>
+<body>
+    <h1>Instance Management</h1>
+
+    <h2>Active Instances</h2>
+    <ul>
+        {% for instance in active_instances %}
+            <li>{{ instance.ip }}:{{ instance.port }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Inactive Instances</h2>
+    <ul>
+        {% for instance in inactive_instances %}
+            <li>{{ instance.ip }}:{{ instance.port }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Manage Instances</h2>
+    <form method="POST">
+        <label for="ip">IP Address:</label>
+        <input type="text" name="ip" required>
+        <label for="port">Port:</label>
+        <input type="number" name="port" required>
+        <button type="submit">Add Instance</button>
+    </form>
+
+    <h2>Navigate to Instance</h2>
+    <form action="/forward" method="GET">
+        <label for="instance_ip">Enter Instance IP:</label>
+        <input type="text" name="instance_ip" required>
+        <label for="instance_port">Enter Instance Port:</label>
+        <input type="number" name="instance_port" required>
+        <button type="submit">Go</button>
+    </form>
+
+</body>
+</html>
