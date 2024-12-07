@@ -1,70 +1,77 @@
-import json
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import json
 
+# Инициализация Flask приложения
 app = Flask(__name__)
 
-# Инициализация лимитера для приложения
-limiter = Limiter(app)
+# Инициализация Flask-Limiter
+limiter = Limiter(get_remote_address, app=app)
 
-# Словарь для хранения данных
+# Инициализация хранилища данных
 data = {}
 
-# Загрузка данных из файла при старте приложения
+
+# Функция загрузки данных из файла при старте
 def load_data():
-    global data
     try:
-        with open("data.json", "r") as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        data = {}
+        with open('data.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
-# Сохранение данных в файл после каждого изменения
+
+# Сохранение данных в файл
 def save_data():
-    with open("data.json", "w") as file:
-        json.dump(data, file)
+    with open('data.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
-# Инициализация данных при старте
-load_data()
 
-# Маршрут для сохранения ключ-значение
+# Загрузка данных из файла
+data = load_data()
+
+
+# Роут для добавления данных
 @app.route('/set', methods=['POST'])
-@limiter.limit("10/minute", key_func=get_remote_address)  # Ограничение 10 запросов в минуту
-def set_value():
-    key = request.json.get('key')
-    value = request.json.get('value')
+@limiter.limit("10 per minute")  # Лимит 10 запросов в минуту для /set
+def set_key_value():
+    content = request.get_json()
+    key = content.get('key')
+    value = content.get('value')
 
-    # Проверка на наличие обязательных данных
-    if not key or value is None:
-        return jsonify({"error": "Ключ и значение обязательны"}), 400
+    if not key or not value:
+        return jsonify({"message": "Both 'key' and 'value' are required"}), 400
 
     data[key] = value
     save_data()
     return jsonify({"message": "Ключ-значение успешно сохранены"}), 200
 
-# Маршрут для получения значения по ключу
+
+# Роут для получения значения по ключу
 @app.route('/get/<key>', methods=['GET'])
-@limiter.limit("100/day", key_func=get_remote_address)  # Ограничение 100 запросов в сутки
+@limiter.limit("100 per day")  # Лимит 100 запросов в сутки для /get
 def get_value(key):
-    if key not in data:
-        return jsonify({"error": "Ключ не найден"}), 404
-    return jsonify({"key": key, "value": data[key]}), 200
+    if key in data:
+        return jsonify({key: data[key]}), 200
+    return jsonify({"message": "Key not found"}), 404
 
-# Маршрут для удаления ключа
+
+# Роут для удаления ключа
 @app.route('/delete/<key>', methods=['DELETE'])
-@limiter.limit("10/minute", key_func=get_remote_address)  # Ограничение 10 запросов в минуту
+@limiter.limit("10 per minute")  # Лимит 10 запросов в минуту для /delete
 def delete_key(key):
-    if key not in data:
-        return jsonify({"error": "Ключ не найден"}), 404
+    if key in data:
+        del data[key]
+        save_data()
+        return jsonify({"message": f"Key '{key}' deleted"}), 200
+    return jsonify({"message": "Key not found"}), 404
 
-    del data[key]
-    save_data()
-    return jsonify({"message": "Ключ успешно удалён"}), 200
 
-# Маршрут для проверки существования ключа
+# Роут для проверки наличия ключа
 @app.route('/exists/<key>', methods=['GET'])
-@limiter.limit("100/day", key_func=get_remote_address)  # Ограничение 100 запросов в сутки
+@limiter.limit("100 per day")  # Лимит 100 запросов в сутки для /exists
 def exists_key(key):
-    exists = key in data
-    return jsonify({"exists": exists}), 200
+    if key in data:
+        return jsonify({"exists": True}), 200
+    return jsonify({"exists": False}), 200
