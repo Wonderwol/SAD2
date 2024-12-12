@@ -1,0 +1,52 @@
+[
+    {
+        "timestamp": "2024-12-12T05:59:03.222329",
+        "category": "Subaru",
+        "amount": 747.9
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.334775",
+        "category": "Subaru",
+        "amount": 378.28
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.445808",
+        "category": "Subaru",
+        "amount": 798.96
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.554993",
+        "category": "Porshe",
+        "amount": 65.59
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.663671",
+        "category": "Lamborgini",
+        "amount": 744.9
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.772461",
+        "category": "Subaru",
+        "amount": 736.15
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.881171",
+        "category": "Lada",
+        "amount": 936.0
+    },
+    {
+        "timestamp": "2024-12-12T05:59:03.994168",
+        "category": "Lada",
+        "amount": 970.35
+    },
+    {
+        "timestamp": "2024-12-12T05:59:04.104058",
+        "category": "Lada",
+        "amount": 328.88
+    },
+    {
+        "timestamp": "2024-12-12T05:59:04.212864",
+        "category": "Subaru",
+        "amount": 829.94
+    }
+]

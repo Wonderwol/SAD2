@@ -1,0 +1,52 @@
+[
+    {
+        "timestamp": "2024-12-12T05:47:18.487662",
+        "category": "Lamborgini",
+        "amount": 751.41
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.596383",
+        "category": "Mercedes",
+        "amount": 850.32
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.706609",
+        "category": "Lexus",
+        "amount": 896.03
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.815557",
+        "category": "Mercedes",
+        "amount": 432.84
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.923957",
+        "category": "Porshe",
+        "amount": 420.56
+    },
+    {
+        "timestamp": "2024-12-12T05:47:19.033840",
+        "category": "Mercedes",
+        "amount": 746.24
+    },
+    {
+        "timestamp": "2024-12-12T05:47:19.143322",
+        "category": "Mazda",
+        "amount": 658.73
+    },
+    {
+        "timestamp": "2024-12-12T05:47:19.251628",
+        "category": "BMW",
+        "amount": 892.72
+    },
+    {
+        "timestamp": "2024-12-12T05:47:19.360931",
+        "category": "Mercedes",
+        "amount": 467.07
+    },
+    {
+        "timestamp": "2024-12-12T05:47:19.469250",
+        "category": "Lexus",
+        "amount": 245.94
+    }
+]

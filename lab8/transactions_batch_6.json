@@ -1,0 +1,52 @@
+[
+    {
+        "timestamp": "2024-12-12T05:47:17.396469",
+        "category": "BMW",
+        "amount": 845.31
+    },
+    {
+        "timestamp": "2024-12-12T05:47:17.504346",
+        "category": "Toyota",
+        "amount": 282.81
+    },
+    {
+        "timestamp": "2024-12-12T05:47:17.612596",
+        "category": "Mazda",
+        "amount": 632.55
+    },
+    {
+        "timestamp": "2024-12-12T05:47:17.722637",
+        "category": "Porshe",
+        "amount": 828.88
+    },
+    {
+        "timestamp": "2024-12-12T05:47:17.833186",
+        "category": "Toyota",
+        "amount": 308.73
+    },
+    {
+        "timestamp": "2024-12-12T05:47:17.941767",
+        "category": "Porshe",
+        "amount": 260.74
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.050211",
+        "category": "Subaru",
+        "amount": 896.44
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.159683",
+        "category": "Lexus",
+        "amount": 762.12
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.269788",
+        "category": "Mercedes",
+        "amount": 333.02
+    },
+    {
+        "timestamp": "2024-12-12T05:47:18.378251",
+        "category": "Mercedes",
+        "amount": 549.14
+    }
+]
