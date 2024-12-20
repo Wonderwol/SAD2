@@ -4,41 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Балансировщик нагрузки</title>
-    <script>
-        function updateInstanceList() {
-            fetch('/instance_list')
-                .then(response => response.json())
-                .then(data => {
-                    const instanceListElement = document.getElementById('instance-list');
-                    instanceListElement.innerHTML = '';
-                    data.instances.forEach((instance, index) => {
-                        const instanceElement = document.createElement('div');
-                        instanceElement.textContent = `${index}: ${instance.url} - ${instance.status}`;
-                        instanceListElement.appendChild(instanceElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching instance list:', error);
-                });
-        }
-        setInterval(updateInstanceList, 5000);
-        window.onload = updateInstanceList;
-    </script>
 </head>
 <body>
     <h1>Балансировщик нагрузки</h1>
     <h2>Инстансы:</h2>
-    <div id="instance-list"></div>
+    <div id="instance-list">
+        {% if instances %}
+            <ul>
+                {% for instance in instances %}
+                    <li>{{ loop.index0 }}: {{ instance.url }} - {{ instance.status }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Нет доступных инстансов.</p>
+        {% endif %}
+    </div>
+    
     <h2>Добавить инстанс:</h2>
-    <form action="http://127.0.0.1:5000/add_instance" method="post">
+    <form action="/add_instance" method="post">
         IP: <input type="text" name="ip" required><br>
         Port: <input type="text" name="port" required><br>
         <input type="submit" value="Добавить">
     </form>
+    
     <h2>Удалить инстанс:</h2>
-    <form action="http://127.0.0.1:5000/remove_instance" method="post">
+    <form action="/remove_instance" method="post">
         Index: <input type="text" name="index" required><br>
         <input type="submit" value="Удалить">
     </form>
 </body>
 </html>
+
+
+

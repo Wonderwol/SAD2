@@ -1,14 +1,21 @@
-from flask import Flask, jsonify, request, redirect, url_for
+from flask import Flask, jsonify, request, render_template
 import requests
 import threading
 import time
 
 app = Flask(__name__)
 
-instances = []
+# Изначальные инстансы
+instances = [
+    {"url": "http://127.0.0.1:5001", "status": "unknown"},
+    {"url": "http://127.0.0.1:5002", "status": "unknown"},
+    {"url": "http://127.0.0.1:5003", "status": "unknown"}
+]
+
 current_instance_index = 0
 
 
+# Проверка состояния инстансов
 def health_check():
     global instances
     while True:
@@ -17,40 +24,28 @@ def health_check():
                 response = requests.get(f"{instance['url']}/health", timeout=2)
                 if response.status_code == 200:
                     instance['status'] = 'healthy'
-                    print(f"Instance {instance['url']} is healthy")
                 else:
                     instance['status'] = 'unhealthy'
-                    print(f"Instance {instance['url']} is unhealthy")
-            except requests.exceptions.RequestException as e:
+            except requests.exceptions.RequestException:
                 instance['status'] = 'unhealthy'
-                print(f"Instance {instance['url']} is unhealthy: {e}")
         time.sleep(5)
 
 
 @app.route('/')
 def index():
-    global current_instance_index
-    if not instances:
-        print("No instances available")
-        return jsonify({"error": "No available instances"}), 503
-
-    for _ in range(len(instances)):
-        instance = instances[current_instance_index]
-        current_instance_index = (current_instance_index + 1) % len(instances)
-        if instance['status'] == 'healthy':
-            return redirect(f"{instance['url']}")
-
-    print("No healthy instances available")
-    return jsonify({"error": "No healthy instances available"}), 503
+    print("Главная страница загружена")  # Для отладки
+    return render_template('index.html', instances=instances)
 
 
 @app.route('/health')
 def health():
+    print("Проверка состояния здоровья")  # Для отладки
     return jsonify({"status": "healthy", "instances": instances})
 
 
 @app.route('/instance_list')
 def instance_list():
+    print("Запрашивается список инстансов")  # Для отладки
     return jsonify({"instances": instances})
 
 
@@ -63,10 +58,8 @@ def add_instance():
         if not any(instance['url'] == instance_url for instance in instances):
             instance = {"url": instance_url, "status": "unknown"}
             instances.append(instance)
-            print(f"Added instance: {instance['url']}")
-        else:
-            print(f"Instance {instance_url} already exists")
-    return redirect(url_for('index'))
+            print(f"Добавлен новый инстанс: {instance_url}")
+    return jsonify({"message": "Instance added"}), 200
 
 
 @app.route('/remove_instance', methods=['POST'])
@@ -74,39 +67,13 @@ def remove_instance():
     index = int(request.form['index'])
     if 0 <= index < len(instances):
         removed_instance = instances.pop(index)
-        print(f"Removed instance: {removed_instance['url']}")
-        return redirect(url_for('index'))
-    else:
-        return jsonify({"error": "Invalid index"}), 400
-
-
-@app.route('/<path:path>', methods=['GET'])
-def catch_all(path):
-    global current_instance_index
-    if not instances:
-        print("No instances available")
-        return jsonify({"error": "No available instances"}), 503
-
-    for _ in range(len(instances)):
-        instance = instances[current_instance_index]
-        current_instance_index = (current_instance_index + 1) % len(instances)
-        if instance['status'] == 'healthy':
-            try:
-                # Перенаправление без лишнего запроса
-                return redirect(f"{instance['url']}/{path}")
-            except requests.exceptions.RequestException as e:
-                print(f"Request to {instance['url']}/{path} failed: {e}")
-                continue
-
-    print("No healthy instances available")
-    return jsonify({"error": "No healthy instances available"}), 503
+        print(f"Удален инстанс: {removed_instance['url']}")
+        return jsonify({"message": "Instance removed"}), 200
+    return jsonify({"error": "Invalid index"}), 400
 
 
 if __name__ == '__main__':
-    instances.append({"url": "http://127.0.0.1:5001", "status": "unknown"})
-    instances.append({"url": "http://127.0.0.1:5002", "status": "unknown"})
-    instances.append({"url": "http://127.0.0.1:5003", "status": "unknown"})
-
+    # Стартуем поток проверки состояния
     thread = threading.Thread(target=health_check)
     thread.daemon = True
     thread.start()
