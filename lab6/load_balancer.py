@@ -29,25 +29,30 @@ def health_check():
                     instance['status'] = 'unhealthy'
             except requests.exceptions.RequestException:
                 instance['status'] = 'unhealthy'
+        print(f"Health check results: {instances}")
         time.sleep(5)
-
 
 # Алгоритм Round Robin
 def get_instance_round_robin():
     global current_instance_index, instances
     healthy_instances = [i for i in instances if i['status'] == 'healthy']
+    
+
+    print(f"Healthy instances: {[instance['url'] for instance in healthy_instances]}")
+
     if not healthy_instances:
         return None
+
+
     instance = healthy_instances[current_instance_index % len(healthy_instances)]
+    print(f"Selected instance: {instance['url']}")
+
     current_instance_index = (current_instance_index + 1) % len(healthy_instances)
     return instance
 
-
 @app.route('/')
 def index():
-    # Возвращение HTML-шаблона с информацией об инстансах
     return render_template('index.html', instances=instances)
-
 
 @app.route('/process', methods=['POST'])
 def process_request():
@@ -56,12 +61,11 @@ def process_request():
         return jsonify({"error": "No healthy instances available"}), 503
 
     try:
-        # Перенаправление запроса на выбранный инстанс
-        response = requests.post(instance['url'], json=request.json, timeout=5)
+        response = requests.post(f"{instance['url']}/process", json=request.json, timeout=5)
         return jsonify(response.json()), response.status_code
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        print(f"Error forwarding to {instance['url']}: {e}")
         return jsonify({"error": "Failed to forward request"}), 500
-
 
 @app.route('/add_instance', methods=['POST'])
 def add_instance():
@@ -76,7 +80,6 @@ def add_instance():
             return jsonify({"error": "Instance already exists"}), 400
     return jsonify({"error": "IP and port are required"}), 400
 
-
 @app.route('/remove_instance', methods=['POST'])
 def remove_instance():
     index = request.form.get('index')
@@ -88,7 +91,6 @@ def remove_instance():
         else:
             return jsonify({"error": "Invalid index"}), 400
     return jsonify({"error": "Index is required"}), 400
-
 
 if __name__ == '__main__':
     # Запуск потока проверки состояния

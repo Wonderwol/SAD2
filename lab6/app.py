@@ -11,7 +11,7 @@ def health():
     return jsonify({"status": "healthy"})
 
 
-@app.route('/process')
+@app.route('/process', methods=['POST'])
 def process():
     return jsonify({"instance_id": instance_id})
 
