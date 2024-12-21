@@ -1,39 +1,43 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Балансировщик нагрузки</title>
+    <title>Load Balancer</title>
 </head>
 <body>
-    <h1>Балансировщик нагрузки</h1>
-    <h2>Инстансы:</h2>
-    <div id="instance-list">
-        {% if instances %}
-            <ul>
-                {% for instance in instances %}
-                    <li>{{ loop.index0 }}: {{ instance.url }} - {{ instance.status }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Нет доступных инстансов.</p>
-        {% endif %}
-    </div>
-    
-    <h2>Добавить инстанс:</h2>
-    <form action="/add_instance" method="post">
-        IP: <input type="text" name="ip" required><br>
-        Port: <input type="text" name="port" required><br>
-        <input type="submit" value="Добавить">
+    <h1>Балансировщик загрузки</h1>
+    <form method="POST" action="/add_instance">
+        <input type="text" name="ip" placeholder="Instance IP" required>
+        <input type="text" name="port" placeholder="Port" required>
+        <button type="submit">Add Instance</button>
     </form>
-    
-    <h2>Удалить инстанс:</h2>
-    <form action="/remove_instance" method="post">
-        Index: <input type="text" name="index" required><br>
-        <input type="submit" value="Удалить">
-    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instance in instances %}
+            <tr>
+                <td>{{ loop.index0 }}</td>
+                <td>{{ instance.url }}</td>
+                <td>{{ instance.status }}</td>
+                <td>
+                    <form method="POST" action="/remove_instance" style="display:inline;">
+                        <input type="hidden" name="index" value="{{ loop.index0 }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
-
 
 
